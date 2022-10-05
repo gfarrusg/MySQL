@@ -33,8 +33,10 @@ SELECT producto.nombre, precio, fabricante.nombre FROM tienda.producto INNER JOI
 SELECT fabricante.nombre, fabricante.codigo FROM tienda.fabricante INNER JOIN tienda.producto ON fabricante.codigo = codigo_fabricante;
 SELECT fabricante.nombre, fabricante.codigo FROM tienda.fabricante LEFT JOIN tienda.producto ON fabricante.codigo = codigo_fabricante;
 SELECT fabricante.nombre FROM tienda.fabricante LEFT JOIN tienda.producto ON fabricante.codigo != producto.codigo_fabricante WHERE NOT fabricante.codigo = ANY ( SELECT producto.codigo_fabricante FROM tienda.producto) LIMIT 10, 2;
-SELECT * FROM tienda.producto WHERE codigo_fabricante =  ( SELECT codigo FROM tienda.fabricante WHERE nombre = 'Lenovo');
-
+SELECT * FROM tienda.producto WHERE codigo_fabricante = ( SELECT codigo FROM tienda.fabricante WHERE nombre = 'Lenovo');
+SELECT * FROM tienda.producto WHERE precio = (SELECT MAX(precio) FROM tienda.producto WHERE producto.codigo_fabricante = (Select codigo FROM tienda.fabricante WHERE nombre = 'Lenovo')); 
 SELECT nombre, MAX(precio) AS precio FROM tienda.producto WHERE codigo_fabricante = (SELECT codigo FROM tienda.fabricante WHERE nombre = "Lenovo");
 SELECT nombre, MIN(precio) AS Precio FROM tienda.producto WHERE codigo_fabricante = (SELECT codigo FROM tienda.fabricante WHERE nombre = "Hewlett-Packard");
 SELECT nombre FROM tienda.producto WHERE precio >= ( SELECT MAX(precio)FROM tienda.producto WHERE codigo_fabricante = (SELECT codigo FROM tienda.fabricante WHERE nombre="Lenovo"));
+SELECT * FROM tienda.fabricante INNER JOIN tienda.producto ON fabricante.codigo = producto.codigo_fabricante WHERE fabricante.nombre = 'Asus' AND producto.precio > (SELECT AVG(precio) FROM tienda.fabricante INNER JOIN tienda.producto ON fabricante.codigo = producto.codigo_fabricante WHERE fabricante.nombre = 'Asus');
+
