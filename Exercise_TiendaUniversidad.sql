@@ -20,7 +20,7 @@ SELECT nombre, precio FROM tienda.producto ORDER BY precio DESC LIMIT 1;
 SELECT nombre FROM tienda.producto WHERE codigo_fabricante = 2;
 SELECT producto.nombre, precio, fabricante.nombre FROM tienda.producto INNER JOIN tienda.fabricante ON codigo_fabricante = fabricante.codigo;
 SELECT producto.nombre, precio, fabricante.nombre FROM tienda.producto INNER JOIN tienda.fabricante ON codigo_fabricante = fabricante.codigo ORDER BY fabricante.nombre ASC;
-SELECT producto.codigo, producto.nombre, fabricante.codigo, fabricante.nombre FROM tienda.producto INNER JOIN tienda.fabricante ON producto.codigo_fabricante = fabricante.codigo;
+SELECT producto.codigo, producto.nombre, fabricante.codigo, fabricante.nombre FROM tienda.producto INNER JOIN tienda.fabricante ON codigo_fabricante = fabricante.codigo;
 SELECT producto.nombre, producto.precio,fabricante.codigo, fabricante.nombre FROM tienda.producto INNER JOIN tienda.fabricante ORDER BY producto.precio ASC LIMIT 1;
 SELECT producto.nombre, producto.precio,fabricante.codigo, fabricante.nombre FROM tienda.producto INNER JOIN tienda.fabricante ORDER BY producto.precio DESC LIMIT 1;
 SELECT * FROM tienda.producto INNER JOIN tienda.fabricante ON codigo_fabricante = fabricante.codigo WHERE fabricante.nombre = 'Lenovo';
@@ -29,10 +29,10 @@ SELECT * FROM tienda.producto INNER JOIN tienda.fabricante ON codigo_fabricante 
 SELECT * FROM tienda.producto INNER JOIN tienda.fabricante ON codigo_fabricante = fabricante.codigo WHERE fabricante.nombre IN ('Asus', 'Hewlett-Packard', 'Seagate');
 SELECT * FROM tienda.producto INNER JOIN tienda.fabricante ON codigo_fabricante = fabricante.codigo WHERE fabricante.nombre LIKE ('%e');
 SELECT * FROM tienda.producto INNER JOIN tienda.fabricante ON codigo_fabricante = fabricante.codigo WHERE fabricante.nombre LIKE ('%w%');
-SELECT producto.nombre, precio, fabricante.nombre FROM tienda.producto INNER JOIN tienda.fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE producto.precio >= 180 ORDER BY producto.precio DESC , producto.nombre ASC;
+SELECT producto.nombre, precio, fabricante.nombre FROM tienda.producto INNER JOIN tienda.fabricante ON codigo_fabricante = fabricante.codigo WHERE precio >= 180 ORDER BY producto.precio DESC , producto.nombre ASC;
 SELECT fabricante.nombre, fabricante.codigo FROM tienda.fabricante INNER JOIN tienda.producto ON fabricante.codigo = codigo_fabricante;
 SELECT fabricante.nombre, fabricante.codigo FROM tienda.fabricante LEFT JOIN tienda.producto ON fabricante.codigo = codigo_fabricante;
-SELECT fabricante.nombre FROM tienda.fabricante LEFT JOIN tienda.producto ON fabricante.codigo != producto.codigo_fabricante WHERE NOT fabricante.codigo = ANY ( SELECT producto.codigo_fabricante FROM tienda.producto) LIMIT 10, 2;
+SELECT fabricante.nombre FROM tienda.fabricante LEFT JOIN tienda.producto ON fabricante.codigo != codigo_fabricante WHERE NOT fabricante.codigo = ANY ( SELECT codigo_fabricante FROM tienda.producto) LIMIT 10, 2;
 SELECT * FROM tienda.producto WHERE codigo_fabricante = ( SELECT codigo FROM tienda.fabricante WHERE nombre = 'Lenovo');
 SELECT * FROM tienda.producto WHERE precio = (SELECT MAX(precio) FROM tienda.producto WHERE producto.codigo_fabricante = (Select codigo FROM tienda.fabricante WHERE nombre = 'Lenovo')); 
 SELECT nombre, MAX(precio) AS precio FROM tienda.producto WHERE codigo_fabricante = (SELECT codigo FROM tienda.fabricante WHERE nombre = "Lenovo");
@@ -41,4 +41,10 @@ SELECT nombre FROM tienda.producto WHERE precio >= ( SELECT MAX(precio)FROM tien
 SELECT * FROM tienda.fabricante INNER JOIN tienda.producto ON fabricante.codigo = codigo_fabricante WHERE fabricante.nombre = 'Asus' AND producto.precio > (SELECT AVG(precio) FROM tienda.fabricante INNER JOIN tienda.producto ON fabricante.codigo = codigo_fabricante WHERE fabricante.nombre = 'Asus');
 /*AQUI EMPIEZA UNIVERSIDAD*/
 SELECT apellido1, apellido2, nombre FROM universidad.persona WHERE tipo = 'alumno' ORDER BY apellido1 DESC;
-SELECT nombre, apellido1, apellido2 FROM universidad.persona WHERE 
+SELECT nombre, apellido1, apellido2 FROM universidad.persona WHERE tipo = 'alumno' AND telefono IS NULL;
+SELECT * FROM universidad.persona WHERE tipo = 'alumno' AND fecha_nacimiento LIKE '1999%';
+SELECT * FROM universidad.persona WHERE tipo = 'profesor' AND telefono IS NULL AND NIF LIKE '%K';
+SELECT * FROM universidad.asignatura WHERE cuatrimestre = 1 AND curso = 3 AND id_grado = 7;
+SELECT apellido1, apellido2, universidad.persona.nombre,universidad.departamento.nombre FROM universidad.persona INNER JOIN universidad.departamento WHERE tipo = 'profesor' ORDER BY apellido1 DESC;
+
+ 
