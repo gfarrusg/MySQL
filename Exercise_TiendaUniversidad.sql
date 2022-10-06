@@ -38,5 +38,7 @@ SELECT * FROM tienda.producto WHERE precio = (SELECT MAX(precio) FROM tienda.pro
 SELECT nombre, MAX(precio) AS precio FROM tienda.producto WHERE codigo_fabricante = (SELECT codigo FROM tienda.fabricante WHERE nombre = "Lenovo");
 SELECT nombre, MIN(precio) AS Precio FROM tienda.producto WHERE codigo_fabricante = (SELECT codigo FROM tienda.fabricante WHERE nombre = "Hewlett-Packard");
 SELECT nombre FROM tienda.producto WHERE precio >= ( SELECT MAX(precio)FROM tienda.producto WHERE codigo_fabricante = (SELECT codigo FROM tienda.fabricante WHERE nombre="Lenovo"));
-SELECT * FROM tienda.fabricante INNER JOIN tienda.producto ON fabricante.codigo = producto.codigo_fabricante WHERE fabricante.nombre = 'Asus' AND producto.precio > (SELECT AVG(precio) FROM tienda.fabricante INNER JOIN tienda.producto ON fabricante.codigo = producto.codigo_fabricante WHERE fabricante.nombre = 'Asus');
-
+SELECT * FROM tienda.fabricante INNER JOIN tienda.producto ON fabricante.codigo = codigo_fabricante WHERE fabricante.nombre = 'Asus' AND producto.precio > (SELECT AVG(precio) FROM tienda.fabricante INNER JOIN tienda.producto ON fabricante.codigo = codigo_fabricante WHERE fabricante.nombre = 'Asus');
+/*AQUI EMPIEZA UNIVERSIDAD*/
+SELECT apellido1, apellido2, nombre FROM universidad.persona WHERE tipo = 'alumno' ORDER BY apellido1 DESC;
+SELECT nombre, apellido1, apellido2 FROM universidad.persona WHERE 
