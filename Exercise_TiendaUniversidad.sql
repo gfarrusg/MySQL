@@ -51,5 +51,14 @@ SELECT a.nombre, c.anyo_inicio, c.anyo_fin FROM persona p, alumno_se_matricula_a
 SELECT DISTINCT d.nombre FROM departamento d, profesor p, asignatura a, grado g WHERE d.id = p.id_departamento AND p.id_profesor = a.id_profesor AND g.id = a.id_grado AND g.id = 4;
 SELECT DISTINCT p.id, p.nif, p.nombre, p.apellido1, p.apellido2 FROM persona p, alumno_se_matricula_asignatura m, curso_escolar c WHERE p.tipo = 'alumno' AND p.id = m.id_alumno AND m.id_curso_escolar = c.id AND c.id = 5;
 SELECT d.nombre 'nombre departamento', a.apellido1, a.apellido2, a.nombre FROM persona a LEFT JOIN profesor p ON a.id = p.id_profesor LEFT JOIN departamento d ON p.id_departamento = d.id WHERE a.tipo = 'profesor' ORDER by d.nombre DESC;
-SELECT a.apellido1, a.apellido2, a.nombre, d.nombre 'nombre departamento' FROM persona a LEFT JOIN departamento d ON a.id = d.id WHERE a.tipo='profesor' AND d.nombre IS NULL;
-SELECT a.apellido1, a.apellido2, a.nombre, d.nombre 'nombre departamento' FROM persona a, profesor p LEFT JOIN departamento d ON d.id = p.id_profesor WHERE a.tipo='profesor' AND a.nombre IS NULL;
+SELECT a.apellido1, a.apellido2, a.nombre, d.nombre 'nombre departamento' FROM persona a LEFT JOIN departamento d ON a.id = d.id WHERE a.tipo ='profesor' AND d.nombre IS NULL;
+SELECT a.nombre, a.apellido1, a.apellido2, d.nombre 'nombre departamento' FROM departamento d RIGHT JOIN persona a ON d.id = a.id WHERE a.tipo ='profesor' AND d.nombre IS NULL;
+SELECT p.nombre, p.apellido1, p.apellido2, a.nombre 'nombre asignatura' FROM departamento d, asignatura a LEFT JOIN persona p ON p.id = a.id WHERE p.tipo ='profesor' AND p.nombre IS NULL;
+/*5 Resol les 6 següents consultes utilitzant les clàusules LEFT JOIN i RIGHT JOIN.*/
+/*6 Resol les 6 següents consultes utilitzant les clàusules LEFT JOIN i RIGHT JOIN.*/
+SELECT p.nombre, p.apellido1, p.apellido2 FROM persona p WHERE p.tipo = 'alumno ';
+SELECT COUNT( 1 ) AS 'numero de alumnos' FROM persona p WHERE p.tipo = 'alumno' AND fecha_nacimiento LIKE '1999%';
+
+
+
+
