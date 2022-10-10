@@ -46,8 +46,10 @@ SELECT nombre, apellido1, apellido2 FROM persona WHERE tipo = 'alumno' AND telef
 SELECT * FROM persona WHERE tipo = 'alumno' AND fecha_nacimiento LIKE '1999%';
 SELECT * FROM persona WHERE tipo = 'profesor' AND telefono IS NULL AND NIF LIKE '%K';
 SELECT * FROM asignatura WHERE cuatrimestre = 1 AND curso = 3 AND id_grado = 7;
-SELECT apellido1,apellido2,p.nombre,d.nombre FROM persona p, departamento d, profesor t  WHERE p.id = t.id_profesor AND t.id_departamento = b.id ORDER BY apellido1,apellido2,p.nombre ASC;
+SELECT apellido1,apellido2,p.nombre,d.nombre FROM persona p, departamento d, profesor t  WHERE p.id = t.id_profesor AND t.id_departamento = d.id ORDER BY apellido1,apellido2,p.nombre ASC;
 SELECT a.nombre, c.anyo_inicio, c.anyo_fin FROM persona p, alumno_se_matricula_asignatura m, asignatura a, curso_escolar c WHERE p.nif = '26902806M' AND p.id = m.id_alumno AND m.id_asignatura = a.id AND m.id_curso_escolar = c.id;
-SELECT DISTINCT d.nombre FROM departamento d, profesor p, asignatura a, grado g WHERE d.id = p.id_departamento AND p.id_profesor = a.id_profesor and g.id = a.id_grado AND g.id = 4;
+SELECT DISTINCT d.nombre FROM departamento d, profesor p, asignatura a, grado g WHERE d.id = p.id_departamento AND p.id_profesor = a.id_profesor AND g.id = a.id_grado AND g.id = 4;
 SELECT DISTINCT p.id, p.nif, p.nombre, p.apellido1, p.apellido2 FROM persona p, alumno_se_matricula_asignatura m, curso_escolar c WHERE p.tipo = 'alumno' AND p.id = m.id_alumno AND m.id_curso_escolar = c.id AND c.id = 5;
-
+SELECT d.nombre 'nombre departamento', a.apellido1, a.apellido2, a.nombre FROM persona a LEFT JOIN profesor p ON a.id = p.id_profesor LEFT JOIN departamento d ON p.id_departamento = d.id WHERE a.tipo = 'profesor' ORDER by d.nombre DESC;
+SELECT a.apellido1, a.apellido2, a.nombre, d.nombre 'nombre departamento' FROM persona a LEFT JOIN departamento d ON a.id = d.id WHERE a.tipo='profesor' AND d.nombre IS NULL;
+SELECT a.apellido1, a.apellido2, a.nombre, d.nombre 'nombre departamento' FROM persona a, profesor p LEFT JOIN departamento d ON d.id = p.id_profesor WHERE a.tipo='profesor' AND a.nombre IS NULL;
