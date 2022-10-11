@@ -53,12 +53,17 @@ SELECT DISTINCT p.id, p.nif, p.nombre, p.apellido1, p.apellido2 FROM persona p, 
 SELECT d.nombre 'nombre departamento', a.apellido1, a.apellido2, a.nombre FROM persona a LEFT JOIN profesor p ON a.id = p.id_profesor LEFT JOIN departamento d ON p.id_departamento = d.id WHERE a.tipo = 'profesor' ORDER by d.nombre DESC;
 SELECT a.apellido1, a.apellido2, a.nombre, d.nombre 'nombre departamento' FROM persona a LEFT JOIN departamento d ON a.id = d.id WHERE a.tipo ='profesor' AND d.nombre IS NULL;
 SELECT a.nombre, a.apellido1, a.apellido2, d.nombre 'nombre departamento' FROM departamento d RIGHT JOIN persona a ON d.id = a.id WHERE a.tipo ='profesor' AND d.nombre IS NULL;
-SELECT p.nombre, p.apellido1, p.apellido2, a.nombre 'nombre asignatura' FROM departamento d, asignatura a LEFT JOIN persona p ON p.id = a.id WHERE p.tipo ='profesor' AND p.nombre IS NULL;
-/*5 Resol les 6 següents consultes utilitzant les clàusules LEFT JOIN i RIGHT JOIN.*/
-/*6 Resol les 6 següents consultes utilitzant les clàusules LEFT JOIN i RIGHT JOIN.*/
+/*4 Resol les 6 següents consultes utilitzant les clàusules LEFT JOIN i RIGHT JOIN.Retorna un llistat amb els professors/es que no imparteixen cap assignatura.*/
+/*5 Resol les 6 següents consultes utilitzant les clàusules LEFT JOIN i RIGHT JOIN.Retorna un llistat amb les assignatures que no tenen un professor/a assignat.*/
+/*6 Resol les 6 següents consultes utilitzant les clàusules LEFT JOIN i RIGHT JOIN.Retorna un llistat amb tots els departaments que no han impartit assignatures en cap curs escolar*/
 SELECT p.nombre, p.apellido1, p.apellido2 FROM persona p WHERE p.tipo = 'alumno ';
 SELECT COUNT( 1 ) AS 'numero de alumnos' FROM persona p WHERE p.tipo = 'alumno' AND fecha_nacimiento LIKE '1999%';
-
-
-
-
+/*3Calcula quants/es professors/es hi ha en cada departament. El resultat només ha de mostrar dues columnes, una amb el nom del departament i una altra amb el nombre de professors/es que hi ha en aquest departament. El resultat només ha d'incloure els departaments que tenen professors/es associats i haurà d'estar ordenat de major a menor pel nombre de professors/es.*/
+SELECT a.nombre, d.nombre FROM departamento d, profesor p, persona a WHERE p.id_profesor = d.id AND a.tipo  = 'profesor';
+SELECT g.nombre, a.nombre FROM grado g, asignatura a WHERE g.id = a.id GROUP BY a.id DESC;
+SELECT g.nombre, a.nombre, COUNT(*) AS 'Numero de Grados' FROM grado g, asignatura a WHERE g.id = a.id_grado GROUP BY g.id HAVING COUNT(*) >=40;
+SELECT g.nombre, a.nombre, COUNT(*) AS 'Creditos Asignaturas'FROM grado g, asignatura a WHERE g.id = a.id GROUP BY g.nombre;
+/*8*/
+/*9*/
+SELECT* FROM persona p WHERE p.tipo='alumno' AND p.fecha_nacimiento IN(SELECT MAX(p.fecha_nacimiento) FROM persona p);
+SELECT a.nombre, d.nombre, g.nombre FROM persona a LEFT JOIN profesor p ON a.id = p.id_profesor LEFT JOIN departamento d ON p.id_departamento = d.id LEFT JOIN asignatura g ON p.id_profesor = g.id_profesor WHERE a.tipo = 'profesor' AND g.nombre IS NULL;
