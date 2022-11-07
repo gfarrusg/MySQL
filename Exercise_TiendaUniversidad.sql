@@ -31,13 +31,13 @@ SELECT * FROM producto INNER JOIN fabricante ON codigo_fabricante = fabricante.c
 SELECT * FROM producto INNER JOIN fabricante ON codigo_fabricante = fabricante.codigo WHERE fabricante.nombre LIKE ('%e');
 SELECT * FROM producto INNER JOIN fabricante ON codigo_fabricante = fabricante.codigo WHERE fabricante.nombre LIKE ('%w%');
 SELECT producto.nombre, precio, fabricante.nombre FROM producto INNER JOIN fabricante ON codigo_fabricante = fabricante.codigo WHERE precio >= 180 ORDER BY producto.precio DESC , producto.nombre ASC;
-SELECT fabricante.nombre, fabricante.codigo FROM fabricante INNER JOIN producto ON fabricante.codigo = codigo_fabricante;
-SELECT fabricante.nombre, fabricante.codigo FROM abricante LEFT JOIN roducto ON fabricante.codigo = codigo_fabricante;
-SELECT fabricante.nombre FROM fabricante LEFT JOIN producto ON fabricante.codigo != codigo_fabricante WHERE NOT fabricante.codigo = ANY ( SELECT codigo_fabricante FROM producto) LIMIT 10, 2;
+SELECT DISTINCT fabricante.codigo, fabricante.nombre FROM producto LEFT JOIN fabricante ON fabricante.codigo = producto.codigo_fabricante;
+SELECT fabricante.nombre, producto.nombre FROM fabricante LEFT JOIN producto ON fabricante.codigo = producto.codigo_fabricante;
+SELECT fabricante.nombre, producto.nombre FROM fabricante LEFT JOIN producto ON fabricante.codigo = producto.codigo_fabricante WHERE producto.nombre IS NULL;
 SELECT * FROM producto WHERE codigo_fabricante = ( SELECT codigo FROM fabricante WHERE nombre = 'Lenovo');
 SELECT * FROM producto WHERE precio = (SELECT MAX(precio) FROM tienda.producto WHERE producto.codigo_fabricante = (Select codigo FROM tienda.fabricante WHERE nombre = 'Lenovo')); 
 SELECT nombre, MAX(precio) AS precio FROM producto WHERE codigo_fabricante = (SELECT codigo FROM fabricante WHERE nombre = "Lenovo");
-SELECT nombre, MIN(precio) AS Precio FROM producto WHERE codigo_fabricante = (SELECT codigo FROM fabricante WHERE nombre = "Hewlett-Packard");
+SELECT * FROM producto WHERE precio >= (SELECT MAX(precio) FROM producto where codigo_fabricante = 2);
 SELECT nombre FROM producto WHERE precio >= ( SELECT MAX(precio)FROM producto WHERE codigo_fabricante = (SELECT codigo FROM tienda.fabricante WHERE nombre="Lenovo"));
 SELECT * FROM fabricante INNER JOIN producto ON fabricante.codigo = codigo_fabricante WHERE fabricante.nombre = 'Asus' AND producto.precio > (SELECT AVG(precio) FROM fabricante INNER JOIN producto ON fabricante.codigo = codigo_fabricante WHERE fabricante.nombre = 'Asus');
 /*AQUI EMPIEZA UNIVERSIDAD*/ USE universidad;
@@ -51,20 +51,20 @@ SELECT a.nombre, c.anyo_inicio, c.anyo_fin FROM persona p, alumno_se_matricula_a
 SELECT DISTINCT d.nombre FROM departamento d, profesor p, asignatura a, grado g WHERE d.id = p.id_departamento AND p.id_profesor = a.id_profesor AND g.id = a.id_grado AND g.id = 4;
 SELECT DISTINCT p.id, p.nif, p.nombre, p.apellido1, p.apellido2 FROM persona p, alumno_se_matricula_asignatura m, curso_escolar c WHERE p.tipo = 'alumno' AND p.id = m.id_alumno AND m.id_curso_escolar = c.id AND c.id = 5;
 SELECT d.nombre 'nombre departamento', a.apellido1, a.apellido2, a.nombre FROM persona a LEFT JOIN profesor p ON a.id = p.id_profesor LEFT JOIN departamento d ON p.id_departamento = d.id WHERE a.tipo = 'profesor' ORDER by d.nombre DESC;
-SELECT a.apellido1, a.apellido2, a.nombre, d.nombre 'nombre departamento' FROM persona a LEFT JOIN departamento d ON a.id = d.id WHERE a.tipo ='profesor' AND d.nombre IS NULL;
-SELECT a.nombre, a.apellido1, a.apellido2, d.nombre 'nombre departamento' FROM departamento d RIGHT JOIN persona a ON d.id = a.id WHERE a.tipo ='profesor' AND d.nombre IS NULL;
-/*4 Resol les 6 següents consultes utilitzant les clàusules LEFT JOIN i RIGHT JOIN.Retorna un llistat amb els professors/es que no imparteixen cap assignatura.*/
-/*5 Resol les 6 següents consultes utilitzant les clàusules LEFT JOIN i RIGHT JOIN.Retorna un llistat amb les assignatures que no tenen un professor/a assignat.*/
-/*6 Resol les 6 següents consultes utilitzant les clàusules LEFT JOIN i RIGHT JOIN.Retorna un llistat amb tots els departaments que no han impartit assignatures en cap curs escolar*/
-SELECT p.nombre, p.apellido1, p.apellido2 FROM persona p WHERE p.tipo = 'alumno';
+SELECT persona.apellido1, persona.apellido2, persona.nombre FROM persona LEFT JOIN profesor ON profesor.id_profesor = persona.id LEFT JOIN departamento ON departamento.id = profesor.id_departamento WHERE departamento.nombre IS NULL ORDER BY departamento.nombre, persona.apellido1, persona.nombre;   
+SELECT departamento.nombre AS departamento, persona.apellido1, persona.apellido2, persona.nombre FROM persona LEFT JOIN profesor ON profesor.id_profesor = persona.id RIGHT JOIN departamento ON departamento.id = profesor.id_departamento WHERE persona.nombre IS NULL ORDER BY departamento.nombre;
+SELECT DISTINCT persona.apellido1, persona.apellido2, persona.nombre FROM persona LEFT JOIN asignatura ON asignatura.id_profesor = persona.id WHERE asignatura.id_profesor IS NULL;
+SELECT departamento.nombre AS departamento FROM persona LEFT JOIN profesor ON profesor.id_profesor = persona.id RIGHT JOIN departamento ON departamento.id = profesor.id_departamento WHERE persona.nombre IS NULL ORDER BY departamento.nombre;
+SELECT nombre FROM asignatura WHERE id_profesor IS NULL;
+SELECT count(id) FROM persona WHERE persona.tipo = 'alumno';
 SELECT COUNT( 1 ) AS 'numero de alumnos' FROM persona p WHERE p.tipo = 'alumno' AND fecha_nacimiento LIKE '1999%';
-/*3Calcula quants/es professors/es hi ha en cada departament. El resultat només ha de mostrar dues columnes, una amb el nom del departament i una altra amb el nombre de professors/es que hi ha en aquest departament. El resultat només ha d'incloure els departaments que tenen professors/es associats i haurà d'estar ordenat de major a menor pel nombre de professors/es.*/
-SELECT a.nombre, d.nombre FROM departamento d, profesor p, persona a WHERE p.id_profesor = d.id AND a.tipo  = 'profesor';
-SELECT g.nombre, a.nombre FROM grado g, asignatura a WHERE g.id = a.id GROUP BY a.id DESC;
-SELECT g.nombre, a.nombre, COUNT(*) AS 'Numero de Grados' FROM grado g, asignatura a WHERE g.id = a.id_grado GROUP BY g.id HAVING COUNT(*) >=40;
+SELECT departamento.nombre, count(profesor.id_profesor) FROM departamento RIGHT JOIN profesor ON departamento.id = profesor.id_departamento GROUP BY departamento.nombre;
+SELECT departamento.nombre, count(profesor.id_profesor) FROM departamento LEFT JOIN profesor ON departamento.id = profesor.id_departamento GROUP BY departamento.nombre;
+SELECT grado.nombre, count(asignatura.id_grado) FROM grado LEFT JOIN asignatura ON asignatura.id_grado = grado.id GROUP BY grado.nombre ORDER BY count(asignatura.id_grado) DESC;
+SELECT grado.nombre AS nombre_grado, count(asignatura.id_grado) AS numero_asignaturas FROM grado LEFT JOIN asignatura ON asignatura.id_grado = grado.id GROUP BY grado.nombre HAVING count(asignatura.id_grado) > 40 ORDER BY count(asignatura.id_grado) DESC;
 SELECT g.nombre, a.nombre, COUNT(*) AS 'Creditos Asignaturas'FROM grado g, asignatura a WHERE g.id = a.id GROUP BY g.nombre;
 /*8 Retorna un llistat que mostri quants/es alumnes s'han matriculat d'alguna assignatura en cadascun dels cursos escolars. El resultat haurà de mostrar dues columnes, una columna amb l'any d'inici del curs escolar i una altra amb el nombre d'alumnes matriculats/des.*/
-SELECT a.id, a.nombre, a.apellido1, a.apellido2, SUM(s.id) FROM asignatura s  RIGHT JOIN profesor p ON s.id_profesor = p.id_profesor RIGHT JOIN persona a ON p.id_profesor = a.id WHERE a.tipo = 'profesor' GROUP BY p.id_profesor ORDER BY SUM(s.id) DESC;
+SELECT persona.id, persona.nombre, persona.apellido1, persona.apellido2, count(asignatura.id) AS asignatures FROM persona LEFT JOIN asignatura ON asignatura.id_profesor = persona.id WHERE persona.tipo="profesor" GROUP BY persona.id ORDER BY asignatures DESC;
 SELECT* FROM persona p WHERE p.tipo='alumno' AND p.fecha_nacimiento IN(SELECT MAX(p.fecha_nacimiento) FROM persona p);
 SELECT a.nombre, a.apellido1,  d.nombre, g.nombre FROM persona a LEFT JOIN profesor p ON a.id = p.id_profesor LEFT JOIN departamento d ON p.id_departamento = d.id LEFT JOIN asignatura g ON p.id_profesor = g.id_profesor WHERE a.tipo = 'profesor' AND g.nombre IS NULL;
 
